@@ -36,3 +36,16 @@ body {
     display: flex;
     flex-direction: column;
 }
+
+#mainSectionContainer {
+    padding-top: 56px;
+    display: flex;
+}
+
+#mainSectionContainer.leftPadding { 
+    padding-left: 240px;
+}
+
+#mainContentContainer {
+    padding: 10px 30px;
+}
