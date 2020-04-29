@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VideoTube</title>
+    <link rel="stylesheet" href="./assets/css/styles.css">
 </head>
 <body>
     <div id="pageContainer">
         <div id="mastHeadContainer">
+        testing
         </div>
 
         <div id="sideNavContainer">
