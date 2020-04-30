@@ -35,7 +35,7 @@
 
         <div id="mainSectionContainer">
             <div id="mainContentContainer">
-                hello everyone
+                <p>Hello everyone</p>
             </div>
         </div>
     </div>
