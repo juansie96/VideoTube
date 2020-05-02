@@ -15,7 +15,9 @@ class VideoDetailsFormProvider {
         $categoriesInput = $this->createCategoriesInput();
         $uploadButton = $this->createUploadButton();
 
-        return "<form action='processing.php' method='POST'>
+
+        // enctype='multipart/form-data'  is required when using forms that have a file upload control (in this case the video upload)
+        return "<form action='processing.php' method='POST' enctype='multipart/form-data'>
                     $fileInput
                     $titleInput
                     $descriptionInput
