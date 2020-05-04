@@ -5,6 +5,8 @@ class VideoProcessor {
     private $con; // Instance of the DB connection
     private $sizeLimit = 50000000; // Video size limit in bytes
     private $supportedTypes = ["mp4", "flv", "webm", "mkv", "vob", "ogv", "ogg", "avi", "wmv", "mov", "mpeg", "mpg"]; // Suported file types.
+    private $ffmpegPath = "ffmpeg/bin/ffmpeg";
+    private $ffprobePath = "ffmpeg/bin/ffprobe";
 
     public function __construct($con) {  
         $this->con = $con;
@@ -30,6 +32,7 @@ class VideoProcessor {
         } 
         
         // tmp_name   Returns the path of the uploaded file on the server
+        // Line below moves the file from the original server path to the specified temporary one
         if (move_uploaded_file($videoData["tmp_name"], $tempFilePath)) {
 
             $finalFilePath = $targetDir . uniqid() . ".mp4";
@@ -38,8 +41,20 @@ class VideoProcessor {
             if (!$this->insertVideoData($videoUploadData, $finalFilePath)) {
                 echo "Insert query failed";
                 return false;
-            } else {
-                echo "Query successful";
+            }
+
+            if (!$this->convertVideoToMp4($tempFilePath, $finalFilePath)) {
+                echo "Convert failed";
+                return false;
+            } 
+
+            if (!$this->deleteFile($tempFilePath)) {
+                return false;
+            } 
+
+            if (!$this->generateThumbnails($finalFilePath)) {
+                echo 'Could not generate thumbnails';
+                return false;
             }
 
         }
@@ -99,5 +114,51 @@ class VideoProcessor {
         return $query->execute();
     }
 
+    public function convertVideoToMp4($tempFilePath, $finalFilePath) {
+        $cmd = "$this->ffmpegPath -i $tempFilePath $finalFilePath 2>&1";
+
+        exec('unset DYLD_LIBRARY_PATH ;');
+        putenv('DYLD_LIBRARY_PATH');
+        putenv('DYLD_LIBRARY_PATH=/usr/bin');
+
+        $outputLog = Array();
+        exec($cmd, $outputLog, $returnCode);
+
+        if ($returnCode != 0) {
+            // Command execution failed
+            foreach($outputLog as $line) {
+                echo $line . "<br>";
+            }
+            return false;
+        }
+
+        return true;
+        
+    }
+
+    private function deleteFile($filePath) {
+        if (!unlink($filePath)) {
+            echo 'Could not delete file \n';
+            return false;
+        }
+
+        return true;
+    }
+
+    public function generateThumbnails($filePath) {
+        $thumbnailSize = "210x118";
+        $numThumbnails = 3;
+        $pathToThumbnail = "uploads/videos/thumbnails";
+
+        $videoDuration = $this->getVideoDuration($filePath);
+
+        echo $videoDuration;
+    }
+
+    private function getVideoDuration($filePath) {
+        return shell_exec("$this->ffprobePath -v error -select_streams v:0 -show_entries stream=duration -of default=noprint_wrappers=1:nokey=1 $filePath");
+    }
+
 }
+
 ?>
