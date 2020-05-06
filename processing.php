@@ -22,7 +22,9 @@
     $wasSuccessful = $videoProcessor->upload($videoUploadData);
 
     // echo $wasSuccessful;
-
+    if ($wasSuccessful) {
+        echo "Upload successful!";
+    }
 
     // 3. Check if upload was successful
 
