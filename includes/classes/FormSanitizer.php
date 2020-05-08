@@ -34,6 +34,7 @@ class FormSanitizer {
     public static function sanitizeFormEmail($email) {
         $email = strip_tags($email);
         $email = str_replace(" ", "", $email);
+        return $email;
     }
 }
 
