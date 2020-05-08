@@ -1,4 +1,11 @@
-<?php require_once("includes/config.php")?>
+<?php 
+require_once("includes/config.php");
+
+if (isset($_POST["submitButton"])) {
+    $firstName = $_POST["firstName"];
+}
+
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -31,7 +38,7 @@
         </div>
 
         <div class="loginForm">
-            <form action="signIn.php">
+            <form action="signIn.php" method="POST">
                 <input type="text" name="username" placeholder="Username" autocomplete="off" required>
                 <input type="password" name="password" placeholder="Password" autocomplete="off" required>
                 <input type="submit" name="submitButton" value="SUBMIT"> 
