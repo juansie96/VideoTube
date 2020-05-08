@@ -1,10 +1,29 @@
 <?php 
 require_once("includes/config.php");
+require_once("includes/classes/FormSanitizer.php");
+include_once("includes/classes/Constants.php");
+require_once("includes/classes/Account.php");
+
+$account = new Account($con);
 
 if (isset($_POST["submitButton"])) {
-    $firstName = $_POST["firstName"];
+
+    $username = FormSanitizer::sanitizeFormUsername($_POST["username"]);
+    $password = FormSanitizer::sanitizeFormPassword($_POST["password"]);
+    
+    $wasSuccessful = $account->login($username, $password);
+
+    if($wasSuccessful) {
+        $_SESSION["userLoggedIn"] = $username;
+        header("Location: index.php");
+    }
 }
 
+function getInputValue($name) { 
+    if (isset($_POST[$name])) {
+        echo $_POST[$name];
+    } 
+}
 ?>
 
 <!DOCTYPE html>
@@ -39,7 +58,8 @@ if (isset($_POST["submitButton"])) {
 
         <div class="loginForm">
             <form action="signIn.php" method="POST">
-                <input type="text" name="username" placeholder="Username" autocomplete="off" required>
+                <?php echo $account->getError(Constants::$loginFail) ?>
+                <input type="text" name="username" placeholder="Username" value="<?php getInputValue('username') ?>" autocomplete="off" required>
                 <input type="password" name="password" placeholder="Password" autocomplete="off" required>
                 <input type="submit" name="submitButton" value="SUBMIT"> 
             </form>

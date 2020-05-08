@@ -1,5 +1,6 @@
 <?php 
 ob_start(); //Turns on ouput buffering
+session_start();
 
 date_default_timezone_set("America/Argentina/Buenos_Aires");
 

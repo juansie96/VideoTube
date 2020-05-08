@@ -23,6 +23,24 @@ class Account {
         }
     }
 
+    public function login($username, $password) {
+        $password = hash('sha512', $password);
+        $query = $this->con->prepare("SELECT username FROM users WHERE username=:username AND password=:password");
+
+        $query->bindParam(":username", $username);
+        $query->bindParam(":password", $password);
+
+        $query->execute();
+
+        if ($query->rowCount() != 0) {
+            return true;
+        } else {
+            array_push($this->errorArray, Constants::$loginFail);
+            return false;
+        }
+
+    }
+
     public function insertUserDetails($fn, $ln, $un, $em, $pw) {
 
         $pw = hash("sha512", $pw);

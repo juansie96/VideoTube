@@ -1,8 +1,8 @@
 <?php 
 require_once("includes/config.php");
 require_once("includes/classes/FormSanitizer.php");
-require_once("includes/classes/Account.php");
 include_once("includes/classes/Constants.php");
+require_once("includes/classes/Account.php");
 
 $account = new Account($con);
 
@@ -23,10 +23,8 @@ if (isset($_POST["submitButton"])) {
     $wasSuccessful = $account->register($firstName, $lastName, $username, $email, $email2, $password, $password2);
 
     if($wasSuccessful) {
-        echo 'Success';
-        // Redirect user to index page
-    } else {
-        echo "Failed";
+        $_SESSION["userLoggedIn"] = $username;
+        header("Location: index.php");
     }
 }
 
