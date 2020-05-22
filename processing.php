@@ -15,17 +15,15 @@
                         $_POST["descriptionInput"],
                         $_POST["privacyInput"],
                         $_POST["categoryInput"],
-                        "REPLACE-THIS" );
+                        $userLoggedInObj->getUsername() );
 
     // 2. Process video data (upload)
     $videoProcessor = new VideoProcessor($con);
     $wasSuccessful = $videoProcessor->upload($videoUploadData);
 
-    // echo $wasSuccessful;
     if ($wasSuccessful) {
         echo "Upload successful!";
     }
 
-    // 3. Check if upload was successful
 
 ?>
